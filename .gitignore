@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.env
+
+# Exclude Windows system folders
+AppData/Local/Microsoft/Windows/Temporary Internet Files/
+AppData/Local/Temp/
