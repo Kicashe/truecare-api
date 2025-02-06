@@ -1,10 +1,15 @@
-
-from flask import request, jsonify
-from flask_restful import Resource
+# app/resources/appointments.py
+from flask import Blueprint, request, jsonify
+from flask_restful import Api, Resource
 from ..models import Appointment, Patient, Doctor
 from .. import db
 from datetime import datetime
 
+# Define the Blueprint
+appointments_bp = Blueprint('appointments', __name__)
+api = Api(appointments_bp)
+
+# Define the AppointmentResource class
 class AppointmentResource(Resource):
     def get(self, appointment_id):
         appointment = Appointment.query.get_or_404(appointment_id)
@@ -30,6 +35,7 @@ class AppointmentResource(Resource):
         db.session.commit()
         return jsonify({"message": "Appointment deleted successfully"})
 
+# Define the AppointmentListResource class
 class AppointmentListResource(Resource):
     def get(self):
         appointments = Appointment.query.all()
@@ -50,3 +56,10 @@ class AppointmentListResource(Resource):
         db.session.add(new_appointment)
         db.session.commit()
         return jsonify({"message": "Appointment created successfully", "id": new_appointment.id}), 201
+
+# Add resources to the API
+api.add_resource(AppointmentListResource, '/appointments')
+api.add_resource(AppointmentResource, '/appointments/<int:appointment_id>')
+
+# Export the Blueprint
+__all__ = ['appointments_bp']

@@ -1,9 +1,14 @@
-
-from flask import request, jsonify
-from flask_restful import Resource
+# app/resources/doctors.py
+from flask import Blueprint, request, jsonify
+from flask_restful import Api, Resource
 from ..models import Doctor
 from .. import db
 
+# Define the Blueprint
+doctors_bp = Blueprint('doctors', __name__)
+api = Api(doctors_bp)
+
+# Define the DoctorResource class
 class DoctorResource(Resource):
     def get(self, doctor_id):
         doctor = Doctor.query.get_or_404(doctor_id)
@@ -27,6 +32,7 @@ class DoctorResource(Resource):
         db.session.commit()
         return jsonify({"message": "Doctor deleted successfully"})
 
+# Define the DoctorListResource class
 class DoctorListResource(Resource):
     def get(self):
         doctors = Doctor.query.all()
@@ -45,3 +51,10 @@ class DoctorListResource(Resource):
         db.session.add(new_doctor)
         db.session.commit()
         return jsonify({"message": "Doctor created successfully", "id": new_doctor.id}), 201
+
+# Add resources to the API
+api.add_resource(DoctorListResource, '/doctors')
+api.add_resource(DoctorResource, '/doctors/<int:doctor_id>')
+
+# Export the Blueprint
+__all__ = ['doctors_bp']

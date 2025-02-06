@@ -1,10 +1,14 @@
-
-from flask import request, jsonify
+# app/resources/auth.py
+from flask import Blueprint, request, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 from ..models import Patient, Doctor
 from .. import db
 
+# Define the Blueprint
+auth_bp = Blueprint('auth', __name__)
+
+# Define the AuthResource class
 class AuthResource(Resource):
     def post(self):
         data = request.get_json()
@@ -24,3 +28,6 @@ class AuthResource(Resource):
             return jsonify(access_token=access_token)
 
         return jsonify({"message": "Invalid credentials"}), 401
+
+# Export the Blueprint
+__all__ = ['auth_bp']
